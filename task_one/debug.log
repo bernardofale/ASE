@@ -1,0 +1,270 @@
+2023-03-02 19:12:30,609 - Debug Adapter (main) - DEBUG - START_TIME_2023_03_02_19-12-30
+2023-03-02 19:12:30,621 - Debug Adapter (main) - DEBUG - Init errors:None
+2023-03-02 19:12:30,624 - Debug Adapter (main) - INFO - Working directory: /
+2023-03-02 19:12:30,629 - Debug Adapter (main) - INFO - Arguments: 
+{   'app_flash_off': 65536,
+    'board_type': None,
+    'cmdfile': '/Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb',
+    'core_file': (),
+    'debug': 5,
+    'developer_mode': 'none',
+    'device_name': 'esp32',
+    'elfpath': ('/Users/bernardofalle/Documents/ASE/blink/build/blink.elf',),
+    'log_file': '/Users/bernardofalle/Documents/ASE/blink/debug.log',
+    'log_mult_files': None,
+    'log_no_debug_console': None,
+    'oocd': 'openocd',
+    'oocd_args': None,
+    'oocd_ip': 'localhost',
+    'oocd_mode': 'without_oocd',
+    'oocd_scripts': None,
+    'port': 43474,
+    'postmortem': False,
+    'tmo_scale_factor': 1,
+    'toolchain_prefix': 'xtensa-esp32-elf-'}
+2023-03-02 19:12:30,633 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STARTED
+2023-03-02 19:12:30,640 - Debug Adapter (main) - INFO - Starting. Cmd: /Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter_main.py -d 5 -e /Users/bernardofalle/Documents/ASE/blink/build/blink.elf -l /Users/bernardofalle/Documents/ASE/blink/debug.log -p 43474 -dn esp32 -a 0x10000 -t xtensa-esp32-elf- -om without_oocd -x /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb
+
+2023-03-02 19:12:30,670 - Debug Adapter (main) - INFO - Listening on port 43474
+2023-03-02 19:12:30,672 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_READY2CONNECT
+2023-03-02 19:12:30,687 - Debug Adapter (main) - DEBUG - Got connection
+2023-03-02 19:12:30,693 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Debug adapter -> Extension: DEBUG_ADAPTER_STARTED\n", "source": {}}, "seq": 0}
+
+2023-03-02 19:12:30,694 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Starting. Cmd: /Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter_main.py -d 5 -e /Users/bernardofalle/Documents/ASE/blink/build/blink.elf -l /Users/bernardofalle/Documents/ASE/blink/debug.log -p 43474 -dn esp32 -a 0x10000 -t xtensa-esp32-elf- -om without_oocd -x /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb\n\n", "source": {}}, "seq": 1}
+
+2023-03-02 19:12:30,694 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Listening on port 43474\n", "source": {}}, "seq": 2}
+
+2023-03-02 19:12:30,695 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Debug adapter -> Extension: DEBUG_ADAPTER_READY2CONNECT\n", "source": {}}, "seq": 3}
+
+2023-03-02 19:12:30,695 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got connection\n", "source": {}}, "seq": 4}
+
+2023-03-02 19:12:30,696 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'Content-Length: 514\\r\\n'<<
+
+2023-03-02 19:12:30,696 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'\\r\\n'<<
+
+2023-03-02 19:12:30,697 - Debug Adapter(Command Processor) - DEBUG - Got json: {
+    "arguments": {
+        "adapterID": "espidf",
+        "clientID": "vscode",
+        "clientName": "Visual Studio Code",
+        "columnsStartAt1": true,
+        "linesStartAt1": true,
+        "locale": "en",
+        "pathFormat": "path",
+        "supportsArgsCanBeInterpretedByShell": true,
+        "supportsInvalidatedEvent": true,
+        "supportsMemoryEvent": true,
+        "supportsMemoryReferences": true,
+        "supportsProgressReporting": true,
+        "supportsRunInTerminalRequest": true,
+        "supportsStartDebuggingRequest": true,
+        "supportsVariablePaging": true,
+        "supportsVariableType": true
+    },
+    "command": "initialize",
+    "seq": 1,
+    "type": "request"
+}
+2023-03-02 19:12:30,697 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got json: {\n    \"arguments\": {\n        \"adapterID\": \"espidf\",\n        \"clientID\": \"vscode\",\n        \"clientName\": \"Visual Studio Code\",\n        \"columnsStartAt1\": true,\n        \"linesStartAt1\": true,\n        \"locale\": \"en\",\n        \"pathFormat\": \"path\",\n        \"supportsArgsCanBeInterpretedByShell\": true,\n        \"supportsInvalidatedEvent\": true,\n        \"supportsMemoryEvent\": true,\n        \"supportsMemoryReferences\": true,\n        \"supportsProgressReporting\": true,\n        \"supportsRunInTerminalRequest\": true,\n        \"supportsStartDebuggingRequest\": true,\n        \"supportsVariablePaging\": true,\n        \"supportsVariableType\": true\n    },\n    \"command\": \"initialize\",\n    \"seq\": 1,\n    \"type\": \"request\"\n}\n", "source": {}}, "seq": 5}
+
+2023-03-02 19:12:30,708 - Gdb - DEBUG - MI->: -gdb-set mi-async on
+2023-03-02 19:12:33,208 - Gdb - DEBUG - MI<-:
+[{'message': None,
+  'payload': '/Library/Developer/CommandLineTools/usr/bin/install_name_tool: '
+             'warning: changes being made to the file will invalidate the code '
+             'signature in: '
+             '/Users/bernardofalle/.espressif/tools/xtensa-esp-elf-gdb/12.1_20221002/xtensa-esp-elf-gdb/bin/xtensa-esp-elf-gdb-3.11.7fFoVgS',
+  'stream': 'stderr',
+  'type': 'output'},
+ {'message': 'thread-group-added',
+  'payload': {'id': 'i1'},
+  'stream': 'stdout',
+  'token': None,
+  'type': 'notify'},
+ {'message': 'done',
+  'payload': None,
+  'stream': 'stdout',
+  'token': None,
+  'type': 'result'}]
+2023-03-02 19:12:33,208 - Gdb - INFO - NOTIFY: thread-group-added {'id': 'i1'}
+2023-03-02 19:12:33,208 - Gdb - DEBUG - RESULT: done None
+2023-03-02 19:12:33,208 - Gdb - DEBUG - MI->: -gdb-set logging file /var/folders/96/bp6rvnld1dg7zlbmttkq8fwc0000gn/T/gdb_proc.log
+2023-03-02 19:12:33,216 - Gdb - DEBUG - MI<-:
+[{'message': 'done',
+  'payload': None,
+  'stream': 'stdout',
+  'token': None,
+  'type': 'result'}]
+2023-03-02 19:12:33,217 - Gdb - DEBUG - RESULT: done None
+2023-03-02 19:12:33,217 - Gdb - DEBUG - MI->: -gdb-set logging on
+2023-03-02 19:12:33,222 - Gdb - DEBUG - MI<-:
+[{'message': None,
+  'payload': "Warning: 'set logging on', an alias for the command 'set logging "
+             "enabled', is deprecated.\\n",
+  'stream': 'stdout',
+  'type': 'console'},
+ {'message': None,
+  'payload': "Use 'set logging enabled on'.\\n\\n",
+  'stream': 'stdout',
+  'type': 'console'},
+ {'message': 'done',
+  'payload': None,
+  'stream': 'stdout',
+  'token': None,
+  'type': 'result'}]
+2023-03-02 19:12:33,222 - Gdb - INFO - CONS: ("Warning: 'set logging on', an alias for the command 'set logging enabled', "
+ 'is deprecated.\\n')
+2023-03-02 19:12:33,222 - Gdb - INFO - CONS: "Use 'set logging enabled on'.\\n\\n"
+2023-03-02 19:12:33,223 - Gdb - DEBUG - RESULT: done None
+2023-03-02 19:12:33,223 - Debug Adapter (main) - DEBUG - Created gdb object of type: GdbEsp32
+2023-03-02 19:12:33,223 - Gdb - DEBUG - MI->: -file-exec-and-symbols /Users/bernardofalle/Documents/ASE/blink/build/blink.elf
+2023-03-02 19:12:33,235 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Created gdb object of type: GdbEsp32\n", "source": {}}, "seq": 6}
+
+2023-03-02 19:12:33,484 - Gdb - DEBUG - MI<-:
+[{'message': 'done',
+  'payload': None,
+  'stream': 'stdout',
+  'token': None,
+  'type': 'result'}]
+2023-03-02 19:12:33,486 - Gdb - DEBUG - RESULT: done None
+2023-03-02 19:12:33,525 - Gdb - DEBUG - Skipped connection to remote target
+2023-03-02 19:12:33,527 - Debug Adapter (main) - WARNING - The operation took too long! - Measured 2.830019 s ( from ~ 19:12:30,697731)
+2023-03-02 19:12:33,528 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "response", "request_seq": 1, "success": true, "command": "initialize", "seq": 7, "body": {"supportsConfigurationDoneRequest": true, "supportsFunctionBreakpoints": false, "supportsConditionalBreakpoints": true, "supportsHitConditionalBreakpoints": true, "supportsEvaluateForHovers": false, "exceptionBreakpointFilters": false, "supportsStepBack": false, "supportsSetVariable": true, "supportsRestartFrame": false, "supportsGotoTargetsRequest": false, "supportsStepInTargetsRequest": true, "supportsCompletionsRequest": false, "completionTriggerCharacters": false, "supportsModulesRequest": false, "additionalModuleColumns": false, "supportedChecksumAlgorithms": false, "supportsRestartRequest": true, "supportsExceptionOptions": false, "supportsValueFormattingOptions": false, "supportsExceptionInfoRequest": false, "supportTerminateDebuggee": true, "supportsDelayedStackTraceLoading": false, "supportsLoadedSourcesRequest": false, "supportsLogPoints": false, "supportsTerminateThreadsRequest": false, "supportsSetExpression": false, "supportsTerminateRequest": false, "supportsDataBreakpoints": true, "supportsReadMemoryRequest": true, "supportsDisassembleRequest": true, "supportsCancelRequest": false, "supportsBreakpointLocationsRequest": false, "supportsClipboardContext": false, "supportsSteppingGranularity": true, "supportsInstructionBreakpoints": true}}
+
+2023-03-02 19:12:33,538 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "initialized", "seq": 8}
+
+2023-03-02 19:12:33,538 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Debug Adapter initialized\n", "source": {}}, "seq": 9}
+
+2023-03-02 19:12:33,538 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "The operation took too long! - Measured 2.830019 s ( from ~ 19:12:30,697731)\n", "source": {}}, "seq": 10}
+
+2023-03-02 19:12:33,539 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Processed command: initialize\n", "source": {}}, "seq": 11}
+
+2023-03-02 19:12:33,537 - Debug Adapter(Command Processor) - DEBUG - Processed command: initialize
+2023-03-02 19:12:33,561 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'Content-Length: 271\\r\\n'<<
+
+2023-03-02 19:12:33,563 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'\\r\\n'<<
+
+2023-03-02 19:12:33,563 - Debug Adapter(Command Processor) - DEBUG - Got json: {
+    "arguments": {
+        "__sessionId": "2567427b-7705-4286-bb62-f54e0df39558",
+        "elfFilePath": "/Users/bernardofalle/Documents/ASE/blink/build/blink.elf",
+        "name": "GDB QEMU",
+        "request": "launch",
+        "sessionID": "qemu.debug.session",
+        "type": "espidf"
+    },
+    "command": "launch",
+    "seq": 2,
+    "type": "request"
+}
+2023-03-02 19:12:33,564 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got json: {\n    \"arguments\": {\n        \"__sessionId\": \"2567427b-7705-4286-bb62-f54e0df39558\",\n        \"elfFilePath\": \"/Users/bernardofalle/Documents/ASE/blink/build/blink.elf\",\n        \"name\": \"GDB QEMU\",\n        \"request\": \"launch\",\n        \"sessionID\": \"qemu.debug.session\",\n        \"type\": \"espidf\"\n    },\n    \"command\": \"launch\",\n    \"seq\": 2,\n    \"type\": \"request\"\n}\n", "source": {}}, "seq": 12}
+
+2023-03-02 19:12:33,564 - Gdb - DEBUG - MI->: -interpreter-exec console "source /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb"
+2023-03-02 19:12:38,566 - Gdb - DEBUG - MI<-:
+[]
+2023-03-02 19:12:38,567 - Debug Adapter (main) - ERROR - Failed to wait for completion of command "-interpreter-exec console "source /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb"" / 5!
+Traceback (most recent call last):
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/command_processor.py", line 144, in on_launch_request
+    self.da.run(start=(not self.da.state.no_debug))
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/debug_adapter.py", line 927, in run
+    self._gdb.exec_run(only_startup=True, startup_tmo=5)
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/hw_specific/esp.py", line 183, in exec_run
+    self.file_cmd_run(self.prog_startup_cmdfile, tmo=startup_tmo)
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/gdb.py", line 312, in file_cmd_run
+    self.console_cmd_run('source %s' % path, tmo=tmo)
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/gdb.py", line 251, in console_cmd_run
+    return self._mi_cmd_run("-interpreter-exec console \"%s\"" % cmd, response_on_success=response_on_success, tmo=tmo)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bernardofalle/.vscode/extensions/espressif.esp-idf-extension-1.6.0/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/gdb.py", line 206, in _mi_cmd_run
+    raise DebuggerTargetStateTimeoutError(
+debug_adapter.debug_backend.debug_backend.defs.DebuggerTargetStateTimeoutError: Failed to wait for completion of command "-interpreter-exec console "source /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb"" / 5!
+2023-03-02 19:12:38,570 - Debug Adapter(Command Processor) - DEBUG - Processed command: launch
+2023-03-02 19:12:38,571 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'Content-Length: 88\\r\\n'<<
+
+2023-03-02 19:12:38,567 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Failed to wait for completion of command \"-interpreter-exec console \"source /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb\"\" / 5!\n", "source": {}}, "seq": 13}
+
+2023-03-02 19:12:38,571 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'\\r\\n'<<
+
+2023-03-02 19:12:38,572 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Failed to wait for completion of command \"-interpreter-exec console \"source /Users/bernardofalle/Documents/ASE/blink/esp-idf-vscode-generated.gdb\"\" / 5!\n", "source": {}}, "seq": 14}
+
+2023-03-02 19:12:38,572 - Debug Adapter(Command Processor) - DEBUG - Got json: {
+    "arguments": {
+        "breakpoints": []
+    },
+    "command": "setDataBreakpoints",
+    "seq": 3,
+    "type": "request"
+}
+2023-03-02 19:12:38,575 - Debug Adapter(Command Processor) - DEBUG - Processed command: setDataBreakpoints
+2023-03-02 19:12:38,575 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'Content-Length: 95\\r\\n'<<
+
+2023-03-02 19:12:38,576 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'\\r\\n'<<
+
+2023-03-02 19:12:38,576 - Debug Adapter(Command Processor) - DEBUG - Got json: {
+    "arguments": {
+        "breakpoints": []
+    },
+    "command": "setInstructionBreakpoints",
+    "seq": 4,
+    "type": "request"
+}
+2023-03-02 19:12:38,576 - Debug Adapter(Command Processor) - DEBUG - Processed command: setInstructionBreakpoints
+2023-03-02 19:12:38,575 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "response", "request_seq": 2, "success": false, "command": "launch", "seq": 15}
+
+2023-03-02 19:12:38,577 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Debug Adapter is not running\n", "source": {}}, "seq": 16}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Processed command: launch\n", "source": {}}, "seq": 17}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got json: {\n    \"arguments\": {\n        \"breakpoints\": []\n    },\n    \"command\": \"setDataBreakpoints\",\n    \"seq\": 3,\n    \"type\": \"request\"\n}\n", "source": {}}, "seq": 18}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "response", "request_seq": 3, "success": true, "command": "setDataBreakpoints", "body": {"breakpoints": []}, "seq": 19}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Processed command: setDataBreakpoints\n", "source": {}}, "seq": 20}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got json: {\n    \"arguments\": {\n        \"breakpoints\": []\n    },\n    \"command\": \"setInstructionBreakpoints\",\n    \"seq\": 4,\n    \"type\": \"request\"\n}\n", "source": {}}, "seq": 21}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "response", "request_seq": 4, "success": true, "command": "setInstructionBreakpoints", "body": {"breakpoints": []}, "seq": 22}
+
+2023-03-02 19:12:38,578 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Processed command: setInstructionBreakpoints\n", "source": {}}, "seq": 23}
+
+2023-03-02 19:12:38,593 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'Content-Length: 79\\r\\n'<<
+
+2023-03-02 19:12:38,594 - Debug Adapter (ReaderThread) - DEBUG - read line: >>b'\\r\\n'<<
+
+2023-03-02 19:12:38,594 - Debug Adapter(Command Processor) - DEBUG - Got json: {
+    "arguments": {
+        "restart": false
+    },
+    "command": "disconnect",
+    "seq": 5,
+    "type": "request"
+}
+2023-03-02 19:12:38,594 - Debug Adapter (main) - DEBUG - Adapter is Stopping...
+2023-03-02 19:12:38,594 - Debug Adapter (main) - DEBUG - Stopping target poller
+2023-03-02 19:12:38,595 - Debug Adapter (main) - DEBUG - Closing the GDB process
+2023-03-02 19:12:38,595 - Gdb - DEBUG - MI->: -gdb-exit
+2023-03-02 19:12:38,622 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Got json: {\n    \"arguments\": {\n        \"restart\": false\n    },\n    \"command\": \"disconnect\",\n    \"seq\": 5,\n    \"type\": \"request\"\n}\n", "source": {}}, "seq": 24}
+
+2023-03-02 19:12:38,623 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Debug Adapter stopped\n", "source": {}}, "seq": 25}
+
+2023-03-02 19:12:38,623 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Adapter is Stopping...\n", "source": {}}, "seq": 26}
+
+2023-03-02 19:12:38,626 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Stopping target poller\n", "source": {}}, "seq": 27}
+
+2023-03-02 19:12:38,626 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Closing the GDB process\n", "source": {}}, "seq": 28}
+
+2023-03-02 19:12:43,595 - Gdb - DEBUG - MI<-:
+[]
+2023-03-02 19:12:43,596 - Debug Adapter (main) - DEBUG - Failed to wait for completion of command "-gdb-exit" / 5!
+2023-03-02 19:12:43,596 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Failed to wait for completion of command \"-gdb-exit\" / 5!\n", "source": {}}, "seq": 29}
+
+2023-03-02 19:12:43,597 - Debug Adapter (main) - DEBUG - Closing the Socket
+2023-03-02 19:12:43,597 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Closing the Socket\n", "source": {}}, "seq": 30}
+
+2023-03-02 19:12:43,602 - Debug Adapter (main) - DEBUG - Stopping of the Writer thread
+2023-03-02 19:12:43,602 - Debug Adapter (WriterThread) - DEBUG - Writing: {"type": "event", "event": "output", "body": {"output": "Stopping of the Writer thread\n", "source": {}}, "seq": 31}
+
+2023-03-02 19:12:43,609 - Debug Adapter (main) - DEBUG - Stopping of the Reader thread
+2023-03-02 19:12:43,610 - Debug Adapter (main) - DEBUG - Adapter is Stopped
+2023-03-02 19:12:43,610 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STOPPED
+2023-03-02 19:12:43,611 - Debug Adapter(Command Processor) - DEBUG - Processed command: disconnect
