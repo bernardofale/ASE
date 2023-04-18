@@ -32,19 +32,20 @@ esp_err_t tc_74_free(i2c_port_t i2cPort){
 }
 
 esp_err_t tc74_standby(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut){
-    uint8_t data = 0x01;
-    return i2c_master_write_to_device(i2cPort, sensAddr, &data, 1, timeOut);
+    uint8_t tx_data[2] = {0x01, 0x80};
+    return i2c_master_write_to_device(i2cPort, sensAddr, &tx_data, 2, timeOut);
 }
 
 esp_err_t tc74_wakeup(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut){
-    uint8_t data = 0x00;
-    return i2c_master_write_to_device(i2cPort, sensAddr, &data, 1, timeOut);
+    uint8_t tx_data[2] = {0x01, 0x40};
+    return i2c_master_write_to_device(i2cPort, sensAddr, &tx_data, 2, timeOut);
 }
 
 bool tc74_is_temperature_ready(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut){
-    uint8_t data = 0x00;
-    i2c_master_read_from_device(i2cPort, sensAddr, &data, 1, timeOut);
-    return (data & 0x80) == 0x80;
+    uint8_t cfg_reg = 0x01;
+    uint8_t isTemp;
+    i2c_master_write_read_device(i2cPort, sensAddr, &cfg_reg, 1, &isTemp, 1, timeOut);
+    return (isTemp & 0x40) == 0x40;
 }
 
 esp_err_t tc74_wakeup_and_read_temp(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut, uint8_t* pData){
@@ -52,21 +53,22 @@ esp_err_t tc74_wakeup_and_read_temp(i2c_port_t i2cPort, uint8_t sensAddr, TickTy
     if(err != ESP_OK){
         return err;
     }
-    //while(!tc74_is_temperature_ready(i2cPort, sensAddr, timeOut)){
-    //    vTaskDelay(10 / portTICK_PERIOD_MS);
-    //}
+    //ver se está ready e ler
+    //chamar temp_after_cfg
+    uint8_t addr = 0x00;
+    vTaskDelay(pdMS_TO_TICKS(5)); /* Wait 5 ms in-between write cycles */
+    i2c_master_write_to_device(i2cPort, sensAddr, &addr, 1, timeOut);
     return i2c_master_read_from_device(i2cPort, sensAddr, pData, 1, timeOut);
 }
 
 esp_err_t tc74_read_temp_after_cfg(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut, uint8_t* pData){
-    esp_err_t err = tc74_wakeup(i2cPort, sensAddr, timeOut);
-    if(err != ESP_OK){
-        return err;
-    }
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    uint8_t addr = 0x00;
+    vTaskDelay(pdMS_TO_TICKS(5)); /* Wait 5 ms in-between write cycles */
+    i2c_master_write_to_device(i2cPort, sensAddr, &addr, 1, timeOut);
     return i2c_master_read_from_device(i2cPort, sensAddr, pData, 1, timeOut);
 }
 
 esp_err_t tc74_read_temp_after_temp(i2c_port_t i2cPort, uint8_t sensAddr, TickType_t timeOut, uint8_t* pData){
+    vTaskDelay(pdMS_TO_TICKS(5));
     return i2c_master_read_from_device(i2cPort, sensAddr, pData, 1, timeOut);
 }

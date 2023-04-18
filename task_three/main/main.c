@@ -52,20 +52,11 @@ uint8_t mean;
 void app_main(void)
 {
 
-
-    /*
-    while(1){
-        test enable
-        test disable
-        test read status
-    }
-    */
-
     /* TC74 initialization */
-    //tc74_init(i2c_master_port, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ);
+    tc74_init(i2c_master_port, I2C_MASTER_SDA_IO, I2C_MASTER_SCL_IO, I2C_MASTER_FREQ_HZ);
 
     /* EEPROM initializaion*/
-    //spi_25LC040_init(SPI_MASTER_HOST, PIN_SPI_SS, PIN_NUM_CLK, PIN_NUM_MOSI, PIN_NUM_MISO, CLK_SPEED, &spi);
+    spi_25LC040_init(SPI_MASTER_HOST, PIN_SPI_SS, PIN_NUM_CLK, PIN_NUM_MOSI, PIN_NUM_MISO, CLK_SPEED, &spi);
 
     /* Semaphore creation */
     temp_to_mean = xSemaphoreCreateBinary();
@@ -127,13 +118,17 @@ void fill_mem(void *pvParameters)
     while(1)
     {
         xSemaphoreTake(mean_to_mem, portMAX_DELAY);
+
         spi_25LC040_write_enable(spi);
-        spi_25LC040_write_byte(spi, 0x00, mean); //??
+        spi_25LC040_write_status(spi, 0x00);
         ESP_LOGI("Writing to EEPROM", "Mean value: %d", mean);
+        spi_25LC040_write_byte(spi, 0x00, mean);
         spi_25LC040_write_disable(spi);
+
         uint8_t inSens;
         spi_25LC040_read_byte(spi, 0x00, &inSens);
         ESP_LOGI("Retrieved from EEPROM", "Mean value: %d", inSens);
+
         if(full == true){
             ESP_LOGI("EEPROM", "EEPROM is full");
             // Dump all EEPROM values

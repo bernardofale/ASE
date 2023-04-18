@@ -76,7 +76,7 @@ esp_err_t spi_25LC040_read_byte(spi_device_handle_t devHandle, uint16_t address,
     uint8_t *tx_data = calculate_instruction_address(0x03, address);
     memset(&t, 0, sizeof(t));
     
-    t.length = (2 * 8) + 8;
+    t.length = 3 * 8;
     t.tx_buffer = tx_data;
     t.rxlength = 8;
     t.rx_buffer = pData;
@@ -170,7 +170,7 @@ esp_err_t spi_25LC040_read_status(spi_device_handle_t devHandle, uint8_t* pStatu
     uint8_t si = 0x05;
     memset(&t, 0, sizeof(t));
     
-    t.length = 8;
+    t.length = 8 * 2;
     t.tx_buffer = &si;
     t.rxlength = 8;
     t.rx_buffer = pStatus;
