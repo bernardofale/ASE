@@ -41,7 +41,7 @@ esp_err_t spi_25LC040_init(spi_host_device_t masterHostId, int csPin, int sckPin
         .address_bits = 0,
         .dummy_bits = 0,
         .mode = 0,
-        .clock_speed_hz = 1000000,
+        .clock_speed_hz = clkSpeedHz,
         .spics_io_num = csPin,
         .queue_size = 1,
     };
