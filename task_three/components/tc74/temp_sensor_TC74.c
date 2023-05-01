@@ -53,8 +53,9 @@ esp_err_t tc74_wakeup_and_read_temp(i2c_port_t i2cPort, uint8_t sensAddr, TickTy
     if(err != ESP_OK){
         return err;
     }
-    //ver se está ready e ler
-    //chamar temp_after_cfg
+    
+    while(!tc74_is_temperature_ready(i2cPort, sensAddr, timeOut));
+    return tc74_read_temp_after_cfg(i2cPort, sensAddr, timeOut, pData);
     uint8_t addr = 0x00;
     vTaskDelay(pdMS_TO_TICKS(5)); /* Wait 5 ms in-between write cycles */
     i2c_master_write_to_device(i2cPort, sensAddr, &addr, 1, timeOut);

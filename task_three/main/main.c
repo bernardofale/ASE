@@ -72,9 +72,9 @@ void app_main(void)
     }
 
     /* Task creation */
-    //xTaskCreate(&temp_aq, "temp_aquisition", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    //xTaskCreate(&calc_mean, "calculate_mean", 2048, NULL, tskIDLE_PRIORITY, NULL);
-    //xTaskCreate(&fill_mem, "fill_memory", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    xTaskCreate(&temp_aq, "temp_aquisition", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    xTaskCreate(&calc_mean, "calculate_mean", 2048, NULL, tskIDLE_PRIORITY, NULL);
+    xTaskCreate(&fill_mem, "fill_memory", 2048, NULL, tskIDLE_PRIORITY, NULL);
 }
 
 void temp_aq(void *pvParameters)
