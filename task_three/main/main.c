@@ -65,6 +65,7 @@ void app_main(void)
         ESP_LOGI("Semaphore", "Semaphore not created");
     }
 
+
     mean_to_mem = xSemaphoreCreateBinary();
     if(mean_to_mem == NULL)
     {
