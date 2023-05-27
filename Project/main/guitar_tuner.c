@@ -27,7 +27,7 @@
 static adc_channel_t channel[1] = {ADC_CHANNEL_7};
 #endif
 
-static TaskHandle_t s_task_handle;
+
 static const char *TAG = "EXAMPLE";
 
 void app_main(void)
