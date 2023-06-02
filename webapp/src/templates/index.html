@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guitar Tuner</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Periodically fetch new data every 1 second
+            setInterval(function() {
+                $.ajax({
+                    url: "/get_data",
+                    type: "GET",
+                    success: function(response) {
+                        $("#data-container").text(response);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <div id="data-container">{{ data }}</div>
+</body>
+</html>
