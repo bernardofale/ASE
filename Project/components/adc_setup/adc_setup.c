@@ -9,7 +9,6 @@
 #endif
 
 static TaskHandle_t s_task_handle;
-static const char *TAG = "EXAMPLE";
 
 void setTaskHandle(TaskHandle_t task_handle)
 {
@@ -25,7 +24,7 @@ bool IRAM_ATTR s_conv_done_cb(adc_continuous_handle_t handle, const adc_continuo
     return (mustYield == pdTRUE);
 }
 
-void continuous_adc_init(adc_channel_t *channel, uint8_t channel_num, adc_continuous_handle_t *out_handle)
+void continuous_adc_init(adc_channel_t *channel, uint8_t channel_num, adc_continuous_handle_t *out_handle, const char* TAG)
 {
     adc_continuous_handle_t handle = NULL;
 

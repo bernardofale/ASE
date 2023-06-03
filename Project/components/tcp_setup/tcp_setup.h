@@ -1,7 +1,6 @@
 #include "nvs_flash.h"
 #include "esp_netif.h"
 #include "esp_event.h"
-#include "sdkconfig.h"
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
@@ -15,4 +14,4 @@
 
 int tcp_innit(const char *TAG);
 
-void tcp_client(const char *TAG);
+void tcp_client(const char *TAG, const char* payload);
