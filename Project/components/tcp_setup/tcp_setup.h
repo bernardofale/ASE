@@ -12,6 +12,6 @@
 #include "addr_from_stdin.h"
 #endif
 
-int tcp_innit(const char *TAG);
+int tcp_innit();
 
-void tcp_client(const char *TAG, const char* payload);
+void tcp_client(const char* payload);

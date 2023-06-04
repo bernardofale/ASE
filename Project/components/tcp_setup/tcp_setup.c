@@ -7,7 +7,7 @@ static int tcp_socket = -1; // Global variable to store the socket
 
 static char* host_ip;
 
-int tcp_innit(const char *TAG)
+int tcp_innit()
 {
     host_ip = HOST_IP_ADDR;
     int addr_family = 0;
@@ -23,30 +23,30 @@ int tcp_innit(const char *TAG)
 
         int sock =  socket(addr_family, SOCK_STREAM, ip_protocol);
         if (sock < 0) {
-            ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+            ESP_LOGE("Dashboard", "Unable to create socket: errno %d", errno);
             close(sock);
             vTaskDelay(3000 / portTICK_PERIOD_MS);
             continue;
         }
-        ESP_LOGI(TAG, "Socket created, connecting to %s:%d", host_ip, PORT);
+        ESP_LOGI("Dashboard", "Socket created, connecting to %s:%d", host_ip, PORT);
 
         int err = connect(sock, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
         if (err != 0) {
-            ESP_LOGE(TAG, "Socket unable to connect: errno %d", errno);
+            ESP_LOGE("Dashboard", "Socket unable to connect: errno %d", errno);
             close(sock);
             vTaskDelay(3000 / portTICK_PERIOD_MS);
             continue;
         }
-        ESP_LOGI(TAG, "Successfully connected");
+        ESP_LOGI("Dashboard", "Successfully connected");
         return sock;
     }
 }
 
-void tcp_client(const char *TAG, const char *payload){
+void tcp_client(const char *payload){
     while (tcp_socket == -1) {
-        tcp_socket = tcp_innit(TAG); // Call tcp_init only if the socket connection is not initialized
+        tcp_socket = tcp_innit(); // Call tcp_init only if the socket connection is not initialized
         if (tcp_socket == -1) {
-            ESP_LOGE(TAG, "Failed to establish the connection");
+            ESP_LOGE("Dashboard", "Failed to establish the connection");
         }
     }
 
@@ -54,8 +54,8 @@ void tcp_client(const char *TAG, const char *payload){
     
     int err = send(tcp_socket, payload, strlen(payload), 0);
     if (err < 0) {
-        ESP_LOGE(TAG, "Error occurred during sending: errno %d", errno);
-        ESP_LOGE(TAG, "Shutting down socket...");
+        ESP_LOGE("Dashboard", "Error occurred during sending: errno %d", errno);
+        ESP_LOGE("Dashboard", "Shutting down socket...");
         shutdown(tcp_socket, 0);
         close(tcp_socket);
         tcp_socket = -1;
@@ -64,8 +64,8 @@ void tcp_client(const char *TAG, const char *payload){
     int len = recv(tcp_socket, rx_buffer, sizeof(rx_buffer) - 1, 0);
     // Error occurred during receiving
     if (len < 0) {
-        ESP_LOGE(TAG, "recv failed: errno %d", errno);
-        ESP_LOGE(TAG, "Shutting down socket...");
+        ESP_LOGE("Dashboard", "recv failed: errno %d", errno);
+        ESP_LOGE("Dashboard", "Shutting down socket...");
         shutdown(tcp_socket, 0);
         close(tcp_socket);
         tcp_socket = -1;
@@ -73,7 +73,7 @@ void tcp_client(const char *TAG, const char *payload){
     // Data received
     else {
         rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
-        ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
-        ESP_LOGI(TAG, "%s", rx_buffer);
+        ESP_LOGI("Dashboard", "Received %d bytes from %s:", len, host_ip);
+        ESP_LOGI("Dashboard", "%s", rx_buffer);
     }
 }
