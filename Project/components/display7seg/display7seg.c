@@ -47,8 +47,8 @@ void display7seg_setup(){
     gpio_config(&io_conf);
 }
 
-void display(int n){
-    ESP_LOGI("Print to 7 segments", "Displaying character: %c", characters[n]); // Log the character
+void display(const char* TAG, int n){
+    ESP_LOGI(TAG, "Displaying character: %c", characters[n]); // Log the character
 
      // Display the letter on the 7-segment display
     gpio_set_level(GPIO_OUTPUT_IO_0, (letters[n] >> 0) & 1);

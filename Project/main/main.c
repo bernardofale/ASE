@@ -124,7 +124,7 @@ void print_seg( void *pvParameters )
     int cnt = 0;
     while(1) {
         if(cnt == 7) cnt = 0;
-        display(cnt);
+        display(TAG, cnt);
         vTaskDelay(1000 / portTICK_PERIOD_MS); 
         cnt++;
     }
@@ -144,7 +144,7 @@ void dashboard( void *pvParameters )
         
         if(i == 7) i = 0;
         snprintf(s, 40, "{\"frequency\": \"%dMHz\", \"note\": \"%c\"}", i * 10, chars[i]);
-        tcp_client(s);
+        tcp_client("Dashboard", s);
         i++;
     }
 }
