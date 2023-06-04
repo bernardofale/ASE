@@ -44,7 +44,7 @@ static const char *TAG = "Guitar Tuner";
 void app_main(void)
 {
     /* ADC Setup */
-    /*memset(result, 0xcc, READ_LEN);
+    memset(result, 0xcc, READ_LEN);
     TaskHandle_t s_task_handle = xTaskGetCurrentTaskHandle();
     setTaskHandle(s_task_handle);
 
@@ -55,7 +55,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(adc_continuous_register_event_callbacks(handle, &cbs, NULL));
     ESP_ERROR_CHECK(adc_continuous_start(handle));
-*/
+
     /* Display7Seg Setup */
     display7seg_setup();
 
@@ -68,7 +68,7 @@ void app_main(void)
     }
     ESP_ERROR_CHECK(ret);
 
-    wifi_init_sta("Dashboard");
+    wifi_init_sta();
 
     /* Semaphore creation */
     acq_to_fft = xSemaphoreCreateBinary();
@@ -78,7 +78,7 @@ void app_main(void)
     }
 
     /* Task creation */
-    //xTaskCreate(&vibe_acq, "Vibration Acquisition", 4096, NULL, tskIDLE_PRIORITY + 4, NULL);
+    xTaskCreate(&vibe_acq, "Vibration Acquisition", 4096, NULL, tskIDLE_PRIORITY + 4, NULL);
     xTaskCreate(&calc_fft, "Calculate FFT", 2048, NULL, tskIDLE_PRIORITY + 3, NULL);
     xTaskCreate(&print_seg, "Print to 7 segments", 2048, NULL, tskIDLE_PRIORITY + 2, NULL);
     xTaskCreate(&dashboard, "Dashboard", 2048, NULL, tskIDLE_PRIORITY + 4, NULL);
@@ -124,7 +124,7 @@ void print_seg( void *pvParameters )
     int cnt = 0;
     while(1) {
         if(cnt == 7) cnt = 0;
-        display(TAG, cnt);
+        display("Print to 7 segments", cnt);
         vTaskDelay(1000 / portTICK_PERIOD_MS); 
         cnt++;
     }
@@ -133,14 +133,17 @@ void print_seg( void *pvParameters )
 void dashboard( void *pvParameters )
 {
     ESP_LOGI("Dashboard", "Start operations");
+    const char chars[] = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G'
+    };
     int i = 0;
-    char* s = (char*)malloc(20 * sizeof(char));
+    char* s = (char*)malloc(40 * sizeof(char));
     while(1)
     {
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         
-        if(i == 10) i = 0;
-        snprintf(s, 20, "%s%d", "Hello from ESP32 ", i);
+        if(i == 7) i = 0;
+        snprintf(s, 40, "{\"frequency\": \"%dMHz\", \"note\": \"%c\"}", i * 10, chars[i]);
         tcp_client("Dashboard", s);
         i++;
     }

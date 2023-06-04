@@ -11,4 +11,4 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-void wifi_init_sta(const char *TAG);
+void wifi_init_sta();

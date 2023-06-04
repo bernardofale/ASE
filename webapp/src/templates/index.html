@@ -45,6 +45,7 @@
                     type: "GET",
                     success: function(response) {
                         var data = JSON.parse(response);
+                        console.log(data);
                         $("#freq-container").text(data.frequency);
                         $("#note-container").text(data.note);
                     },
@@ -57,7 +58,7 @@
     </script>
 </head>
 <body>
-    <div id="freq-container"></div>
-    <div id="note-container"></div>
+    <div id="freq-container">0MHz</div>
+    <div id="note-container">-</div>
 </body>
 </html>
