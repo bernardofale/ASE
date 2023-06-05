@@ -17,13 +17,13 @@
                               (1ULL<<GPIO_OUTPUT_IO_6))
 
 const uint8_t letters[] = {
-        0b01110111,  // A
-        0b01111100,  // b
-        0b00111001,  // C
-        0b01011110,  // d
-        0b01111001,  // E
-        0b01110001,  // F
-        0b01111101   // G
+        0b00001000,  // A
+        0b00000011,  // b
+        0b01000110,  // C
+        0b00100001,  // d
+        0b00000110,  // E
+        0b00001110,  // F
+        0b00000010   // G
     };
 
 const char characters[] = {
@@ -47,8 +47,8 @@ void display7seg_setup(){
     gpio_config(&io_conf);
 }
 
-void display(int n){
-    ESP_LOGI("Print to 7 segments", "Displaying character: %c", characters[n]); // Log the character
+void display(const char* TAG, int n){
+    ESP_LOGI(TAG, "Displaying character: %c", characters[n]); // Log the character
 
      // Display the letter on the 7-segment display
     gpio_set_level(GPIO_OUTPUT_IO_0, (letters[n] >> 0) & 1);

@@ -99,6 +99,8 @@
 
                         // Remove "Hz" suffix and parse the frequency value
                         var frequency = parseInt(data.frequency.replace("Hz", ""));
+                        console.log(data);
+                        console.log(frequency);
                         
                         // Limit the number of data points
                         if (labels.length > maxDataPoints) {

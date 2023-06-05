@@ -6,4 +6,4 @@
 
 void display7seg_setup();
 
-void display(int n);
+void display(const char* TAG, int n);
