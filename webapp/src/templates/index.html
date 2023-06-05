@@ -34,11 +34,59 @@
             border-radius: 8px;
             color: #FFFFFF;
         }
+
+        #chart-container {
+            width: 600px;
+            height: 400px;
+            margin-top: 20px;
+        }
     </style>
+</head>
+<body>
+    <div id="freq-container">0MHz</div>
+    <div id="note-container">-</div>
+    <div id="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        var maxDataPoints = 20; // Maximum number of data points to display on the chart
+        var frequencyData = [];  // Array to store frequency values
+        var labels = []; // Array to store labels for the chart
+
+        // Create a line chart
+        var ctx = document.getElementById('chart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Frequency (Hz)',
+                    data: frequencyData,
+                    fill: false,
+                    borderColor: '#00BFA5',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true
+                    },
+                    y: {
+                        display: true,
+                        suggestedMin: 0,
+                        suggestedMax: 4500
+                    }
+                }
+            }
+        });
+
         $(document).ready(function() {
-            // Periodically fetch new data every 1 second
+            // Periodically fetch new data every 500 milliseconds
             setInterval(function() {
                 $.ajax({
                     url: "/get_data",
@@ -48,6 +96,21 @@
                         console.log(data);
                         $("#freq-container").text(data.frequency);
                         $("#note-container").text(data.note);
+
+                        // Remove "Hz" suffix and parse the frequency value
+                        var frequency = parseInt(data.frequency.replace("Hz", ""));
+                        
+                        // Limit the number of data points
+                        if (labels.length > maxDataPoints) {
+                            labels.splice(0, 1); // Remove the oldest label
+                            frequencyData.splice(0, 1); // Remove the oldest frequency data
+                        }
+
+                        // Update chart data
+                        labels.push('');
+                        frequencyData.push(frequency);
+                        
+                        chart.update();
                     },
                     error: function(error) {
                         console.log(error);
@@ -56,9 +119,5 @@
             }, 500);
         });
     </script>
-</head>
-<body>
-    <div id="freq-container">0MHz</div>
-    <div id="note-container">-</div>
 </body>
 </html>
