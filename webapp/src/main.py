@@ -7,7 +7,7 @@ from flask import Flask, request, render_template
 
 app = Flask(__name__)
 tcp_socket = None
-data = "{ \"frequency\":\"0Hz\", \"note\":\"A\"}"  # Global variable to store the received data
+data = "{ \"distance\":\"0\", \"motorOn\":\"false\"}"  # Global variable to store the received data
 
 @app.route('/', methods=['GET'])
 def root():

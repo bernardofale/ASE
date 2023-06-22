@@ -1,50 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Guitar Tuner</title>
+    <title>Distance Sensor</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #333333;
             font-family: Arial, sans-serif;
         }
 
-        #freq-container {
-            font-size: 72px;
-            text-align: center;
-            padding: 20px;
-            background-color: #FF4081;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            color: #FFFFFF;
-            margin-right: 10px;
+        #container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
-        #note-container {
-            font-size: 72px;
+        #dist-container,
+        #motorOn-container {
+            font-size: 36px;
             text-align: center;
             padding: 20px;
-            background-color: #536DFE;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             color: #FFFFFF;
+            flex: 0 0 auto;
+        }
+
+        #dist-container {
+            background-color: #00BFA5;
+            width: 200px;
+        }
+
+        #motorOn-container {
+            width: 100px;
+            background-color: #333333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #motorOn-container .light {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            align-items: left;
+        }
+
+        .light.green {
+            background-color: #00FF00;
+        }
+
+        .light.red {
+            background-color: #FF0000;
         }
 
         #chart-container {
-            width: 600px;
-            height: 400px;
-            margin-top: 20px;
+            width: 800px;
+            height: 500px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="freq-container">0MHz</div>
-    <div id="note-container">-</div>
+    <div id="container">
+        <div id="dist-container">0 cm</div>
+        <div id="motorOn-container">
+            <div class="light"></div>
+        </div>
+    </div>
     <div id="chart-container">
         <canvas id="chart"></canvas>
     </div>
@@ -53,7 +89,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var maxDataPoints = 20; // Maximum number of data points to display on the chart
-        var frequencyData = [];  // Array to store frequency values
+        var distanceData = [];  // Array to store distance values
         var labels = []; // Array to store labels for the chart
 
         // Create a line chart
@@ -63,8 +99,8 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Frequency (Hz)',
-                    data: frequencyData,
+                    label: 'Distance (cm)',
+                    data: distanceData,
                     fill: false,
                     borderColor: '#00BFA5',
                     tension: 0.1
@@ -79,7 +115,7 @@
                     y: {
                         display: true,
                         suggestedMin: 0,
-                        suggestedMax: 4500
+                        suggestedMax: 1000
                     }
                 }
             }
@@ -94,23 +130,26 @@
                     success: function(response) {
                         var data = JSON.parse(response);
                         console.log(data);
-                        $("#freq-container").text(data.frequency);
-                        $("#note-container").text(data.note);
+                        $("#dist-container").text(data.distance + " cm");
 
-                        // Remove "Hz" suffix and parse the frequency value
-                        var frequency = parseInt(data.frequency.replace("Hz", ""));
-                        console.log(data);
-                        console.log(frequency);
+                        // Update light color based on data.motorOn value
+                        var lightElement = $("#motorOn-container .light");
+                        lightElement.removeClass("green red");
+                        if (data.motorOn == "true") {
+                            lightElement.addClass("green");
+                        } else {
+                            lightElement.addClass("red");
+                        }
                         
                         // Limit the number of data points
                         if (labels.length > maxDataPoints) {
                             labels.splice(0, 1); // Remove the oldest label
-                            frequencyData.splice(0, 1); // Remove the oldest frequency data
+                            distanceData.splice(0, 1); // Remove the oldest distance data
                         }
 
                         // Update chart data
                         labels.push('');
-                        frequencyData.push(frequency);
+                        distanceData.push(data.distance);
                         
                         chart.update();
                     },

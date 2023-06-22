@@ -39,14 +39,10 @@ gptimer_handle_t distance_timer_handle;
 
 static const char *TAG = "Motion Sensor";
 
+static int dist = 100;
 
 void app_main(void)
 {
-
-    /* WiFi Setup 
-    ESP_ERROR_CHECK(nvs_flash_init());
-    wifi_init_sta();
-    */
 
     /* Distance timer setup */
     distance_timer_handle = NULL;
@@ -63,10 +59,13 @@ void app_main(void)
     gpio_set_direction(TRIGGER_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);    
     
+    /* WiFi Setup */
+    ESP_ERROR_CHECK(nvs_flash_init());
+    wifi_init_sta();
     
     /* Task creation */
     xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    //xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 4, NULL);
+    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 4, NULL);
 }
 
 void distance( void *pvParameters ){
@@ -112,10 +111,14 @@ void distance( void *pvParameters ){
 void dashboard( void *pvParameters )
 {
     ESP_LOGI("Dashboard", "Start operations");
-    const char chars[] = {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G'
-    };
-    while(1)
-    {   
+    int i = 0;
+    while(1){
+        if(i == 7) i = 0;
+        char* s = (char*) pvPortMalloc(40 * sizeof(char));
+        snprintf(s, 40, "{\"distance\": \"%d\", \"motorOn\": \"%s\"}", i * 100, (i*100 < 400) ? "false" : "true");
+        tcp_client("Dashboard", s);
+        vPortFree(s);
+        i++;
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
