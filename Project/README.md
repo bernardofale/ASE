@@ -43,6 +43,6 @@ Source code for Web App to be run on the host.
 
 6. `python3 main.py`
 
-7. Navigate to the [dashboard page](localhost:3000)
+7. Navigate to the [dashboard page](http://localhost:3000)
 
 #
