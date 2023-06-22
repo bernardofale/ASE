@@ -21,9 +21,9 @@ Source code for Web App to be run on the host.
 
 3. Verify your assigned IP address in hotspot network.
 
-4. In "tcp_setup.c" change the value HOST_IP_ADDR to your assigned IP address.
+4. In [File Name](distSensor/components/tcp_setup/tcp_setup.c) change the value HOST_IP_ADDR to your assigned IP address.
 
-5. In "wifi_setup.c" change the values of EXAMPLE_ESP_WIFI_SSID and EXAMPLE_ESP_WIFI_PASS to the SSID and Password of the hotspot network.
+5. In [File Name](distSensor/components/wifi_setup/wifi_setup.c) change the values of EXAMPLE_ESP_WIFI_SSID and EXAMPLE_ESP_WIFI_PASS to the SSID and Password of the hotspot network.
 
 ## Usage
 
@@ -43,6 +43,6 @@ Source code for Web App to be run on the host.
 
 6. `python3 main.py`
 
-7. Navigate to `localhost:3000`
+7. Navigate to [Link Text](localhost:3000)
 
 #
