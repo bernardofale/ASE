@@ -6,10 +6,15 @@ Project developed for the ASE course
 | 93331 | Bernardo Falé | [@bernardofale](https://github.com/bernardofale) |
 | 93196 | Pedro Pereira | [@pedrocjdpereira](https://github.com/pedrocjdpereira) |
 
-## Directory description
-### distSensor
+## Project file structure
+### distSensor/
 Source code for the ESP32 program to be flashed.
-### webapp
+#### distSensor/main/
+Main program
+#### distSensor/components/
+Auxiliary modules for the main program
+
+### webapp/
 Source code for Web App to be run on the host.
 
 ## Configurations
