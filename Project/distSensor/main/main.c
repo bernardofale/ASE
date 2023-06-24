@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include "adc_setup.h"
-#include "fft.h"
 #include "wifi_setup.h"
 #include "tcp_setup.h"
-#include "display7seg.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -26,7 +24,6 @@
 #include "rom/ets_sys.h"
 #include "driver/gpio.h"
 #include "esp_timer.h"
-
 #include "esp_system.h"
 #include "esp_console.h"
 #include "esp_vfs_dev.h"
@@ -35,24 +32,85 @@
 #include "cmd_system.h"
 #include "cmd_wifi.h"
 #include "cmd_nvs.h"
+#include "lcdlib.h"
+#include <driver/i2c.h>
+#include "esp_sleep.h"
 
+/* Ultra-sonic sensor GPIO definition */
 #define TRIGGER_GPIO GPIO_NUM_25
 #define ECHO_GPIO GPIO_NUM_26
+
+/* LCD pins and address definitions */
+#define LCD_ADDR 0x27
+#define SDA_PIN  21
+#define SCL_PIN  22
+#define LCD_COLS 16
+#define LCD_ROWS 2
+
+/* Sampling related macros */
+#define MAXIMUM_SAMPLING_RATE 70 /* in ms*/
+#define MINIMUM_SAMPLING_RATE 1000 /* in ms*/
+#define ADC_MAX 4095 /* Maximum ADC value */
 
 /* Thread functions prototypes */
 void distance( void *pvParameters );
 void dashboard( void *pvParameters );
+void display( void *pvParameters );
 void console( void *pvParameters );
+void sampling_rate( void *pvParameters );
+
+/* ADC definitions */
+#define READ_LEN 256
+#if CONFIG_IDF_TARGET_ESP32
+ static adc_channel_t channel[1] = {ADC_CHANNEL_6}; /* GPIO 35 */
+ #endif
+ adc_continuous_handle_t handle;
+ uint8_t result[READ_LEN] = {0};
+
+/* Semaphore definition */
+SemaphoreHandle_t display_semaphore;
+SemaphoreHandle_t mutex_sampling;
 
 /* Timer definitions */
 gptimer_handle_t distance_timer_handle;
 
 static const char *TAG = "Motion Sensor";
 
-static int dist = 100;
+/* Global distance and sampling rate variables */
+static float dist;
+static float s_rate = 70.0;
 
 void app_main(void)
-{
+{   
+
+    /* ADC setup */
+    esp_err_t ret;
+    memset(result, 0x00, READ_LEN);
+    TaskHandle_t s_task_handle = xTaskGetCurrentTaskHandle();
+    setTaskHandle(s_task_handle);
+
+    continuous_adc_init(channel, sizeof(channel) / sizeof(adc_channel_t), &handle, "ADC Setup");
+    
+    adc_continuous_evt_cbs_t cbs = {
+        .on_conv_done = s_conv_done_cb,
+    };
+    ESP_ERROR_CHECK(adc_continuous_register_event_callbacks(handle, &cbs, NULL));
+    ESP_ERROR_CHECK(adc_continuous_start(handle));
+
+    /* Semaphore creation */
+    display_semaphore = xSemaphoreCreateBinary();
+    mutex_sampling = xSemaphoreCreateMutex();
+    
+    if(display_semaphore == NULL){
+        ESP_LOGI("Semaphore creation", "Error creating semaphore");
+    }
+    if(mutex_sampling == NULL){
+        ESP_LOGI("Mutex_sampling creation", "Error creating mutex_sampling");
+    }
+    xSemaphoreGive(mutex_sampling);
+
+    /* LCD setup */
+    LCD_init(LCD_ADDR, SDA_PIN, SCL_PIN, LCD_COLS, LCD_ROWS);
 
     /* Distance timer setup */
     distance_timer_handle = NULL;
@@ -71,7 +129,7 @@ void app_main(void)
     
     /* WiFi Setup */
     ESP_ERROR_CHECK(nvs_flash_init());
-    wifi_init_sta();
+    //wifi_init_sta();
     
     /* Console Setup */
     esp_console_repl_t *repl = NULL;
@@ -93,7 +151,26 @@ void app_main(void)
     
     /* Task creation */
     xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    //xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&sampling_rate, "Sampling rate", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+}
+
+void sampling_rate( void *pvParameters )
+{
+    ESP_LOGI("Sampling rate", "Start operations");
+    uint32_t ret_num = 0;
+
+    while(1){
+        int ret;
+        ret = adc_continuous_read(handle, result, READ_LEN, &ret_num, 0);
+        adc_digi_output_data_t *p = (void*)&result[0];
+        /* Sampling rate (ms) = (Potentiometer value / 4095) * (Maximum sampling rate - Minimum sampling rate) + Minimum sampling rate */
+        xSemaphoreTake(mutex_sampling, portMAX_DELAY);
+        s_rate = ((float)(ADC_MAX - p->type1.data) / ADC_MAX) * (MAXIMUM_SAMPLING_RATE - MINIMUM_SAMPLING_RATE) + MINIMUM_SAMPLING_RATE;;
+        xSemaphoreGive(mutex_sampling);
+        vTaskDelay(10);
+    }
 }
 
 void distance( void *pvParameters ){
@@ -101,7 +178,7 @@ void distance( void *pvParameters ){
     uint16_t echo_duration = 0;
 
     while(1)
-    {
+    {   
         
         /* Sending pulse to activate sensor trigger */
         gpio_set_level(TRIGGER_GPIO, 1);
@@ -124,15 +201,39 @@ void distance( void *pvParameters ){
         ESP_ERROR_CHECK(gptimer_get_raw_count(distance_timer_handle, &echo_duration));
 
         /* Calculate the distance based on the duration of the echo */
-        float distance = (float)echo_duration * 0.034 / 2.0;
-        printf("Distance: %.2f cm\n", distance);
+        dist = (float)echo_duration * 0.034 / 2.0;
         
         /* Stop and reset the timer */
         ESP_ERROR_CHECK(gptimer_stop(distance_timer_handle));
         ESP_ERROR_CHECK(gptimer_set_raw_count(distance_timer_handle, 0));
         ESP_ERROR_CHECK(gptimer_disable(distance_timer_handle));
+        xSemaphoreGive(display_semaphore);
 
-        vTaskDelay(70 / portTICK_PERIOD_MS);
+        xSemaphoreTake(mutex_sampling, portMAX_DELAY);
+        vTaskDelay(((int) s_rate) / portTICK_PERIOD_MS);
+        xSemaphoreGive(mutex_sampling);
+    }
+}
+
+void display( void *pvParameters )
+{
+    ESP_LOGI("Display", "Start operations");
+    char buffer[20];
+    char buffer2[20];
+    while(1){
+        xSemaphoreTake(display_semaphore, portMAX_DELAY);
+        snprintf(buffer, sizeof(buffer), "%f", dist);
+        xSemaphoreTake(mutex_sampling, portMAX_DELAY);
+        snprintf(buffer2, sizeof(buffer2), "%f", s_rate);
+        xSemaphoreGive(mutex_sampling);
+        strcat(buffer, " Cm");
+        strcat(buffer2, " Ms");
+        LCD_home();
+        LCD_clearScreen();
+        LCD_writeStr(buffer);
+        LCD_setCursor(0, 1);
+        LCD_writeStr(buffer2);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
