@@ -1,6 +1,6 @@
 #include "tcp_setup.h"
 
-#define HOST_IP_ADDR "192.168.1.134"
+#define HOST_IP_ADDR "192.168.43.12"
 #define PORT 5000
 
 static int tcp_socket = -1; // Global variable to store the socket
