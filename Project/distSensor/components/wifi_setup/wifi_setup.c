@@ -1,7 +1,7 @@
 #include"wifi_setup.h"
 
-#define EXAMPLE_ESP_WIFI_SSID      "Redmi"
-#define EXAMPLE_ESP_WIFI_PASS      "abcd1234"
+#define EXAMPLE_ESP_WIFI_SSID      "Vodafone-2A5C38"
+#define EXAMPLE_ESP_WIFI_PASS      "DeXU4jPEnV"
 #define EXAMPLE_ESP_MAXIMUM_RETRY  100
 
 #define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK

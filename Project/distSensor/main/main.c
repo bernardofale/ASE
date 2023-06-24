@@ -77,18 +77,16 @@ gptimer_handle_t distance_timer_handle;
 static const char *TAG = "Motion Sensor";
 
 /* Global distance and sampling rate variables */
-static float dist;
+static float dist = 0.0;
 static float s_rate = 70.0;
 
 void app_main(void)
 {   
 
     /* ADC setup */
-    esp_err_t ret;
-    memset(result, 0x00, READ_LEN);
     TaskHandle_t s_task_handle = xTaskGetCurrentTaskHandle();
     setTaskHandle(s_task_handle);
-
+    
     continuous_adc_init(channel, sizeof(channel) / sizeof(adc_channel_t), &handle, "ADC Setup");
     
     adc_continuous_evt_cbs_t cbs = {
@@ -96,6 +94,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(adc_continuous_register_event_callbacks(handle, &cbs, NULL));
     ESP_ERROR_CHECK(adc_continuous_start(handle));
+
 
     /* Semaphore creation */
     display_semaphore = xSemaphoreCreateBinary();
@@ -128,7 +127,7 @@ void app_main(void)
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);    
     
     /* WiFi Setup */
-    ESP_ERROR_CHECK(nvs_flash_init());
+    //ESP_ERROR_CHECK(nvs_flash_init());
     //wifi_init_sta();
     
     /* Console Setup */
@@ -244,7 +243,7 @@ void dashboard( void *pvParameters )
     while(1){
         if(i == 7) i = 0;
         char* s = (char*) pvPortMalloc(40 * sizeof(char));
-        snprintf(s, 40, "{\"distance\": \"%d\", \"motorOn\": \"%s\"}", i * 100, (i*100 < 400) ? "false" : "true");
+        snprintf(s, 40, "{\"distance\": \"%d\", \"motorOn\": \"%s\"}", 1, (i*100 < 400) ? "false" : "true");
         tcp_client("Dashboard", s);
         vPortFree(s);
         i++;
