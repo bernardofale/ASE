@@ -27,12 +27,22 @@
 #include "driver/gpio.h"
 #include "esp_timer.h"
 
+#include "esp_system.h"
+#include "esp_console.h"
+#include "esp_vfs_dev.h"
+#include "esp_vfs_fat.h"
+#include "nvs.h"
+#include "cmd_system.h"
+#include "cmd_wifi.h"
+#include "cmd_nvs.h"
+
 #define TRIGGER_GPIO GPIO_NUM_25
 #define ECHO_GPIO GPIO_NUM_26
 
 /* Thread functions prototypes */
 void distance( void *pvParameters );
 void dashboard( void *pvParameters );
+void console( void *pvParameters );
 
 /* Timer definitions */
 gptimer_handle_t distance_timer_handle;
@@ -63,9 +73,27 @@ void app_main(void)
     ESP_ERROR_CHECK(nvs_flash_init());
     wifi_init_sta();
     
+    /* Console Setup */
+    esp_console_repl_t *repl = NULL;
+    esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
+    /* Prompt to be printed before each line.
+     * This can be customized, made dynamic, etc.
+     */
+    repl_config.prompt = "distSensor>";
+    repl_config.max_cmdline_length = 1024;
+
+    /* Register commands */
+    esp_console_register_help_command();
+    register_system();
+
+    esp_console_dev_uart_config_t hw_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_console_new_repl_uart(&hw_config, &repl_config, &repl));
+
+    ESP_ERROR_CHECK(esp_console_start_repl(repl));
+    
     /* Task creation */
     xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 4, NULL);
+    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
 }
 
 void distance( void *pvParameters ){

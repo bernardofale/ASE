@@ -73,7 +73,7 @@ void tcp_client(const char *TAG, const char *payload){
     // Data received
     else {
         rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
-        ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
-        ESP_LOGI(TAG, "%s", rx_buffer);
+        //ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
+        //ESP_LOGI(TAG, "%s", rx_buffer);
     }
 }
