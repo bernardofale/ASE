@@ -62,9 +62,10 @@ void sampling_rate( void *pvParameters );
 /* ADC definitions */
 #define READ_LEN 256
 #if CONFIG_IDF_TARGET_ESP32
- static adc_channel_t channel[1] = {ADC_CHANNEL_6}; /* GPIO 35 */
+ static adc_channel_t channel[1] = {ADC_CHANNEL_6}; /* GPIO 34 */
  #endif
  adc_continuous_handle_t handle;
+ uint8_t result[READ_LEN] = {0};
 
 /* Semaphore definition */
 SemaphoreHandle_t display_semaphore;
@@ -108,7 +109,7 @@ void app_main(void)
     xSemaphoreGive(mutex_sampling);
 
     /* LCD setup */
-    //LCD_init(LCD_ADDR, SDA_PIN, SCL_PIN, LCD_COLS, LCD_ROWS);
+    LCD_init(LCD_ADDR, SDA_PIN, SCL_PIN, LCD_COLS, LCD_ROWS);
 
     /* Distance timer setup */
     distance_timer_handle = NULL;
@@ -126,8 +127,8 @@ void app_main(void)
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);    
     
     /* WiFi Setup */
-    ESP_ERROR_CHECK(nvs_flash_init());
-    wifi_init_sta();
+    //ESP_ERROR_CHECK(nvs_flash_init());
+    //wifi_init_sta();
     
     /* Console Setup */
     esp_console_repl_t *repl = NULL;
@@ -149,21 +150,21 @@ void app_main(void)
     
     /* Task creation */
     xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
-    //xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
-    //xTaskCreate(&sampling_rate, "Sampling rate", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    //xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&sampling_rate, "Sampling rate", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
 }
 
 void sampling_rate( void *pvParameters )
 {
     ESP_LOGI("Sampling rate", "Start operations");
     uint32_t ret_num = 0;
-    uint8_t* result = (uint8_t*) pvPortMalloc(READ_LEN*8); 
 
     while(1){
         int ret;
         ret = adc_continuous_read(handle, result, READ_LEN, &ret_num, 0);
-        adc_digi_output_data_t *p = (void*)&result;
+        adc_digi_output_data_t *p = (void*)&result[0];
+        //printf("Potentiometer value: %d\n", p->type1.data);
         /* Sampling rate (ms) = (Potentiometer value / 4095) * (Maximum sampling rate - Minimum sampling rate) + Minimum sampling rate */
         xSemaphoreTake(mutex_sampling, portMAX_DELAY);
         s_rate = ((float)(ADC_MAX - p->type1.data) / ADC_MAX) * (MAXIMUM_SAMPLING_RATE - MINIMUM_SAMPLING_RATE) + MINIMUM_SAMPLING_RATE;;
@@ -221,9 +222,10 @@ void display( void *pvParameters )
     char buffer2[20];
     while(1){
         xSemaphoreTake(display_semaphore, portMAX_DELAY);
-        snprintf(buffer, sizeof(buffer), "%f", dist);
+        snprintf(buffer, sizeof(buffer), "%.2f", dist);
         xSemaphoreTake(mutex_sampling, portMAX_DELAY);
-        snprintf(buffer2, sizeof(buffer2), "%f", s_rate);
+        snprintf(buffer2, sizeof(buffer2), "%.2f", s_rate);
+        //printf("sampling rate: %f ms\n", s_rate);
         xSemaphoreGive(mutex_sampling);
         strcat(buffer, " Cm");
         strcat(buffer2, " Ms");
@@ -232,18 +234,21 @@ void display( void *pvParameters )
         LCD_writeStr(buffer);
         LCD_setCursor(0, 1);
         LCD_writeStr(buffer2);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(300 / portTICK_PERIOD_MS);
     }
 }
 
 void dashboard( void *pvParameters )
 {
     ESP_LOGI("Dashboard", "Start operations");
+    int i = 0;
     while(1){
-        char* s = (char*) pvPortMalloc(45 * sizeof(char));
-        snprintf(s, 45, "{\"distance\": \"%.2f\", \"samplerate\": \"%.2f\"}", dist, s_rate);
+        if(i == 7) i = 0;
+        char* s = (char*) pvPortMalloc(40 * sizeof(char));
+        snprintf(s, 40, "{\"distance\": \"%d\", \"motorOn\": \"%s\"}", 1, (i*100 < 400) ? "false" : "true");
         tcp_client("Dashboard", s);
         vPortFree(s);
+        i++;
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
