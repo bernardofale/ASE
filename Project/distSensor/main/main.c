@@ -133,9 +133,7 @@ void app_main(void)
     /* Console Setup */
     esp_console_repl_t *repl = NULL;
     esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
-    /* Prompt to be printed before each line.
-     * This can be customized, made dynamic, etc.
-     */
+    /* Prompt to be printed before each line. */
     repl_config.prompt = "distSensor>";
     repl_config.max_cmdline_length = 1024;
 
