@@ -109,7 +109,7 @@ void app_main(void)
     xSemaphoreGive(mutex_sampling);
 
     /* LCD setup */
-    LCD_init(LCD_ADDR, SDA_PIN, SCL_PIN, LCD_COLS, LCD_ROWS);
+    //LCD_init(LCD_ADDR, SDA_PIN, SCL_PIN, LCD_COLS, LCD_ROWS);
 
     /* Distance timer setup */
     distance_timer_handle = NULL;
@@ -127,8 +127,8 @@ void app_main(void)
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);    
     
     /* WiFi Setup */
-    //ESP_ERROR_CHECK(nvs_flash_init());
-    //wifi_init_sta();
+    ESP_ERROR_CHECK(nvs_flash_init());
+    wifi_init_sta();
     
     /* Console Setup */
     esp_console_repl_t *repl = NULL;
@@ -150,8 +150,8 @@ void app_main(void)
     
     /* Task creation */
     xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    //xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
-    xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    //xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
     xTaskCreate(&sampling_rate, "Sampling rate", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
 }
 
@@ -241,14 +241,11 @@ void display( void *pvParameters )
 void dashboard( void *pvParameters )
 {
     ESP_LOGI("Dashboard", "Start operations");
-    int i = 0;
     while(1){
-        if(i == 7) i = 0;
-        char* s = (char*) pvPortMalloc(40 * sizeof(char));
-        snprintf(s, 40, "{\"distance\": \"%d\", \"motorOn\": \"%s\"}", 1, (i*100 < 400) ? "false" : "true");
+        char* s = (char*) pvPortMalloc(50 * sizeof(char));
+        snprintf(s, 50, "{\"distance\": \"%.2f\", \"samplerate\": \"%.2f\"}", dist, s_rate);
         tcp_client("Dashboard", s);
         vPortFree(s);
-        i++;
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
