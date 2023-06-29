@@ -94,7 +94,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(adc_continuous_register_event_callbacks(handle, &cbs, NULL));
     ESP_ERROR_CHECK(adc_continuous_start(handle));
-
+    
 
     /* Semaphore creation */
     display_semaphore = xSemaphoreCreateBinary();
@@ -125,9 +125,8 @@ void app_main(void)
     gpio_reset_pin(ECHO_GPIO);
     gpio_set_direction(TRIGGER_GPIO, GPIO_MODE_OUTPUT);
     gpio_set_direction(ECHO_GPIO, GPIO_MODE_INPUT);    
-    
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     /* WiFi Setup */
-    ESP_ERROR_CHECK(nvs_flash_init());
     wifi_init_sta();
     
     /* Console Setup */
@@ -147,8 +146,8 @@ void app_main(void)
     ESP_ERROR_CHECK(esp_console_start_repl(repl));
     
     /* Task creation */
-    xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY, NULL);
-    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&distance, "Distance Task", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(&dashboard, "Dashboard", 4096, NULL, tskIDLE_PRIORITY, NULL);
     //xTaskCreate(&display, "Display distance", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
     xTaskCreate(&sampling_rate, "Sampling rate", 4096, NULL, tskIDLE_PRIORITY + 1, NULL);
 }
@@ -241,7 +240,9 @@ void dashboard( void *pvParameters )
     ESP_LOGI("Dashboard", "Start operations");
     while(1){
         char* s = (char*) pvPortMalloc(50 * sizeof(char));
+        xSemaphoreTake(mutex_sampling, portMAX_DELAY);
         snprintf(s, 50, "{\"distance\": \"%.2f\", \"samplerate\": \"%.2f\"}", dist, s_rate);
+        xSemaphoreGive(mutex_sampling);
         tcp_client("Dashboard", s);
         vPortFree(s);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
